@@ -1,0 +1,269 @@
+
+/******************************************************************************
+
+                            Online C Compiler.
+                Code, Compile, Run and Debug C program online.
+Write your code in this editor and press "Run" button to compile and execute it.
+
+*******************************************************************************/
+
+#include <stdio.h>
+#include <conio.h>
+#define MAX 10
+
+
+struct acc{
+    int no;
+    char name[50];
+    char pass[50];
+    int bal;
+    int lock;
+}a[MAX];
+
+
+int f=0;i=10;
+int invalid[10];
+
+
+
+void create(){
+    
+    printf("\n");
+    printf("\nYour Account Number is:%d",i);
+    a[f].no = i;
+    printf("\nEnter Your Name: ");
+    scanf("%s",a[f].name);
+    printf("Enter Passcode: ");
+    scanf("%s",a[f].pass);
+    a[f].bal = 0;
+    a[f].lock = 0;
+    f++;
+    i++;
+}
+
+void login(){
+    
+    int no;
+    printf("\nEnter Account Number: ");
+    scanf("%d",&no);
+    
+    
+    char name[20], pass[10];
+    
+    int itr=0, c=0;
+    int flag = 1;
+    int unlock = 0;
+    
+    
+    while(c!=3){
+        
+    for(itr=0;itr<MAX;itr++){
+        
+        if(a[itr].no == no && a[itr].lock == 0){
+            
+            
+              printf("\nEnter Name: ");
+              scanf("%s",name);
+              printf("Enter Passcode: ");
+              scanf("%s",pass);
+              
+            if(strcmp(a[itr].name,name)==0 && strcmp(a[itr].pass,pass)==0){
+            successful(itr);
+            flag = 0;
+            break;
+            }
+            
+            
+        }
+        
+        else if(a[itr].no == no && a[itr].lock == 1){
+            printf("\nAccount Locked");
+            main();
+            break;
+        }
+        
+        else{
+            printf("");
+        }
+    }
+    
+    if(flag == 1){
+    c++;
+    }
+    }
+    
+    if(c == 3){
+        for(itr=0;itr<MAX;itr++){
+            if(a[itr].no == no){
+                if(a[itr].lock == 0){
+                a[itr].lock = 1;
+                break;
+                }
+                
+                else{
+                    main();
+                }
+            }
+        }
+        take(no);
+    }
+    
+}
+
+
+void successful(int itr){
+    
+    int acc_no=itr;
+    int ch;
+    
+     do{
+            printf("\n");
+            printf("\nSelect An Operation:");
+            printf("\n1.Check Balance");
+            printf("\n2.Fund Transfer");
+            printf("\n3.Update Balance");
+            printf("\n4.Exit");
+            printf("\nEnter Your Choice:");
+            scanf("%d",&ch);
+            
+            switch(ch){
+                case 1:printf("%d",a[itr].bal);
+                         break;
+                case 2:transfer(itr);
+                         break;
+                case 3:update(itr);
+                         break;
+                case 4:printf("Exit");
+                        main();
+                         break;    
+            }
+        }while(ch!=4);
+          
+    
+}
+
+void transfer(int itr){
+    
+    
+    int amt;
+    
+    printf("\nHow much amount to transfer:");
+    scanf("%d",&amt);
+    
+    if(amt>a[itr].bal){
+        printf("\nInsufficient funds");
+    }
+    else
+    {
+       a[itr].bal = a[itr].bal - amt;
+       printf("\nsuccessful transfer");
+    }
+    
+}
+
+void update(int itr){
+    
+    
+    int amt;
+    
+    printf("\nHow much amount to update by:");
+    scanf("%d",&amt);
+    
+       a[itr].bal = a[itr].bal + amt;
+       printf("\nsuccessful update");
+      
+}
+
+void take(int no){
+    
+    int j=0;
+    
+    for(j=0;j<10;j++){
+            if(invalid[j]==NULL){
+                invalid[j]=no;
+                break;
+            }
+      
+    }
+}
+
+void print(){
+    int j=0;
+    
+    if(invalid[0]==NULL){
+        printf("\nNo invalid attempts");
+    }
+    
+    else{
+    printf("\nList of Accounts for invalid attempts");    
+    for(j=0;j<10;j++){
+        if(invalid[j]!=NULL){
+                printf("\n%d",invalid[j]);
+        }
+      
+    }
+    }
+}
+    
+
+int main()
+{
+    
+    
+    int role,op;
+    
+    mainlist:
+    printf("\n");
+    printf("\n**********BANK APPLICATION**********");
+    printf("\nChoose User Type:");
+    printf("\n1.User");
+    printf("\n2.Admin");
+    printf("\nEnter Your Choice:");
+    scanf("%d",&role);
+    
+    if(role == 1){
+        do{
+            printf("\nSelect An Operation:");
+            printf("\n1.Create Account");
+            printf("\n2.Sign-In to Account");
+            printf("\n3.Exit");
+            printf("\nEnter Your Choice:");
+            scanf("%d",&op);
+            
+            switch(op){
+                case 1:create();
+                         break;
+                case 2:login();
+                         break;
+                case 3:printf("THANK YOU");
+                        goto mainlist;
+                         break;
+            }
+        }while(op!=3);
+        
+    }
+    
+    if(role==2){
+        
+        char admin_id[10],admin_pass[10];
+        
+        printf("\nWELCOME ADMIN");
+        printf("\nEnter id:");
+        scanf("%s",admin_id);
+        printf("Enter password:");
+        scanf("%s",admin_pass);
+        if(strcmp(admin_id,"admin")==0 && strcmp(admin_pass,"devtech")==0){
+        print();
+        goto mainlist;
+        }
+        else
+        {
+            printf("Inavlid Credentials. Cannot trust you!!!!");
+            exit(0);
+        }
+    }
+    
+    
+
+    return 0;
+}
